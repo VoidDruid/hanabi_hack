@@ -63,7 +63,4 @@ class GithubApi:
         return prs_dict
 
 
-
-
 api = GithubApi()
-print(api.count_prs('KovalevVasilii'))
