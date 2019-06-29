@@ -10,7 +10,7 @@ class GithubApi:
         try:
             return self.g.get_user(user_name).get_repos()
         except:
-            return None
+            return []
 
     def get_languages_counts(self, user_name):
         lang_dict = defaultdict(int)
@@ -19,7 +19,7 @@ class GithubApi:
                 lang_dict[repo.language] += 1
             lang_dict.pop(None, None)
         except:
-            return None
+            return {}
         return lang_dict
 
     def get_stars(self, user_name):
@@ -27,22 +27,20 @@ class GithubApi:
         try:
             for repo in self.get_user_repos(user_name):
                 stars_count += repo.stargazers_count
-        except:
-            pass
-
-        return stars_count
+        finally:
+            return stars_count
 
     def get_user_prs(self, user_name):
         try:
             return self.g.search_issues('', involves=user_name, type='pr')
         except:
-            return None
+            return []
 
     def get_user_issues(self, user_name):
         try:
             return self.g.search_issues('', involves=user_name, type='issue')
         except:
-            return None
+            return []
 
     def get_prs_by_language(self, user_name):
         lang_dict = defaultdict(int)
@@ -55,4 +53,3 @@ class GithubApi:
 
 
 api = GithubApi()
-#api.get_dict_languages_pull_request('KovalevVasilii')
