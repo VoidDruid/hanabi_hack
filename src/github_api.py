@@ -10,12 +10,13 @@ class GithubApi:
             return self.g_object.get_user(user_name).get_repos()
         except:
 
-
     def get_dict_languages(self, user_name):
         print(10)
+
+
 # Then play with your Github objects:
-#for repo in g.get_user('IgorBeschastnov').get_repos():
-   # print(repo.name, repo.language, repo.stargazers_count)
+# for repo in g.get_user('IgorBeschastnov').get_repos():
+# print(repo.name, repo.language, repo.stargazers_count)
 
 
 if __name__ == '__main__':
