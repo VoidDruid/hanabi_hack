@@ -57,10 +57,13 @@ class GithubApi:
         if prs:
             for pr in prs:
                 p = pr.as_pull_request()
-                if p.merged:
-                    prs_dict[p.head.repo.language]['merged'] += 1
-                else:
-                    prs_dict[p.head.repo.language]['failed'] += 1
+                try:
+                    if p.merged:
+                        prs_dict[p.head.repo.language]['merged'] += 1
+                    else:
+                        prs_dict[p.head.repo.language]['failed'] += 1
+                except AttributeError:
+                    pass
         return prs_dict
 
 
