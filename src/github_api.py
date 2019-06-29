@@ -51,5 +51,19 @@ class GithubApi:
             lang_dict.pop(None, None)
         return lang_dict
 
+    def count_prs(self, user_name):
+        prs_dict = defaultdict(int)
+        prs = self.get_user_prs(user_name)
+        if prs:
+            for pr in prs:
+                if pr.as_pull_request().merged:
+                    prs_dict['merged'] += 1
+                else:
+                    prs_dict['failed'] += 1
+        return prs_dict
+
+
+
 
 api = GithubApi()
+print(api.count_prs('KovalevVasilii'))
