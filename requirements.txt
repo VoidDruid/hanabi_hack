@@ -61,3 +61,5 @@ wrapt==1.11.2
 redis==3.2.1
 tensorrec==0.26.2
 PyGithub==1.43.7
+matplotlib==3.1.0
+seaborn==0.9.0
