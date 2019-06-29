@@ -40,3 +40,11 @@ services:
       - POSTGRES_DB=hanabi
     volumes:
       - ./.postgres/:/var/lib/postgresql/data
+  red:
+    restart: unless-stopped
+    image: redis
+    entrypoint: redis-server --appendonly yes
+    volumes:
+      - ./.redis:/data
+    ports:
+      - "6379:6379"
