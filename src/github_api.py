@@ -6,7 +6,7 @@ from collections import defaultdict
 
 class GithubApi:
     def __init__(self):
-        self.g = Github("KovalevVasilii", "witcher136")
+        self.g = Github("IgorBeschastnov", "Spacewalk_1")
 
     def get_user_repos(self, user):
         if isinstance(user, str):
@@ -93,13 +93,13 @@ class GithubApi:
 
     def get_user_profile(self, user_name):
         user_obj = self.g.get_user(user_name)
+        if user_obj.public_repos == 0:
+            return None
         repos = self.get_user_repos(user_obj)
-        prs = self.get_user_prs(user_name)
         stars = self.get_stars(user_obj, repos)
         language_counts = self.get_languages_counts(user_obj, repos)
         user_data = {
             **language_counts,
-            #**{'pr_'+key: value for key, value in self.get_prs_by_language(user_name, prs).items()},
             'stars': stars,
             'login': user_name,
             'contributions': user_obj.contributions,
@@ -109,8 +109,8 @@ class GithubApi:
         }
         return user_data
 
-    def get_users_set(self, count=50):
-        users = self.g.get_users(since=20000000)
+    def get_users_set(self, count=50, since=20000000):
+        users = self.g.get_users(since=since)
         users_result = []
         for user, _ in zip(users, range(count)):
             users_result.append(user.login)
