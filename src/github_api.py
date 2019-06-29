@@ -1,26 +1,26 @@
 from github import Github
+from collections import defaultdict
 
 
 class GithubApi:
     def __init__(self):
-        self.g_object = Github("KovalevVasilii", "witcher136")
+        self.g= Github("KovalevVasilii", "witcher136")
 
     def get_user_repos(self, user_name):
         try:
-            return self.g_object.get_user(user_name).get_repos()
+            return self.g.get_user(user_name).get_repos()
         except:
+            return None
 
     def get_dict_languages(self, user_name):
-        print(10)
+        lang_dict = defaultdict(int)
+        try:
+            for repo in self.get_user_repos(user_name):
+                lang_dict[repo.language] += 1
+            del lang_dict[None]
+        except:
+            return None
+        return lang_dict
 
 
-# Then play with your Github objects:
-# for repo in g.get_user('IgorBeschastnov').get_repos():
-# print(repo.name, repo.language, repo.stargazers_count)
-
-
-if __name__ == '__main__':
-    name = 'IgorBeschastno'
-    api = GithubApi()
-    api.get_user_repos(name)
-    print(a)
+api = GithubApi()
