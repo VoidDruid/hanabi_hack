@@ -1,3 +1,6 @@
+# Pgdata
+.postgres/
+
 # Logs
 logs
 *.log
