@@ -52,14 +52,15 @@ class GithubApi:
         return lang_dict
 
     def count_prs(self, user_name):
-        prs_dict = defaultdict(int)
+        prs_dict = defaultdict(lambda: defaultdict(int))
         prs = self.get_user_prs(user_name)
         if prs:
             for pr in prs:
-                if pr.as_pull_request().merged:
-                    prs_dict['merged'] += 1
+                p = pr.as_pull_request()
+                if p.merged:
+                    prs_dict[p.head.repo.language]['merged'] += 1
                 else:
-                    prs_dict['failed'] += 1
+                    prs_dict[p.head.repo.language]['failed'] += 1
         return prs_dict
 
 
