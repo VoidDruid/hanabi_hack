@@ -223,3 +223,7 @@ venv.bak/
 .mypy_cache/
 
 hanabi/
+
+.redis/
+
+hanabi_hack/

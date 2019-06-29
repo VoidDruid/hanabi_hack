@@ -13,11 +13,15 @@ def redis_wrapper(field):
             lookup = redis_db.hget(user_name, field)
             if lookup:
                 return pickle.loads(lookup)
-            result = func(self, user, *args, **kwargs)
-            if isinstance(result, PaginatedList.PaginatedList):
-                result = list(result)
-            redis_db.hset(user_name, field, pickle.dumps(result))
-            return result
+            try:
+                result = func(self, user, *args, **kwargs)
+                if isinstance(result, PaginatedList.PaginatedList):
+                    result = list(result)
+                redis_db.hset(user_name, field, pickle.dumps(result))
+                return result
+            except:
+                redis_db.delete(user_name)
+                return None
         return inner_func
     return wrapper
 
@@ -78,10 +82,7 @@ class GithubApi:
     def get_prs_by_language(self, user_name, prs=None):
         lang_dict = defaultdict(int)
         if prs is None:
-            try:
-                prs = self.get_user_prs(user_name)
-            except:
-                pass
+            prs = self.get_user_prs(user_name)
         if prs:
             try:
                 for ev in prs:
@@ -99,10 +100,7 @@ class GithubApi:
     def count_prs(self, user_name, prs=None):
         prs_dict = defaultdict(self._defaultdict_int)
         if prs is None:
-            try:
-                prs = self.get_user_prs(user_name)
-            except:
-                pass
+            prs = self.get_user_prs(user_name)
         if not prs:
             return {}
         for pr in prs:
