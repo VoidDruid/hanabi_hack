@@ -113,14 +113,15 @@ def get_neighbours_by_row(row):
         results.append((index, euclidean(row_, row)))
     results.sort(key=lambda pair: pair[1])
     results = list(map(lambda pair: pair[0], results[:4]))
-    return results
+    return list(login.loc[results])
 
 
-def get_neighbours_by_login(login):
+def get_neighbours_by_login(login_):
     try:
-        series = old_data[old_data['login'] == login].iloc[0]
+        series = old_data[old_data['login'] == login_].iloc[0]
+        series.pop('cluster')
     except IndexError:
-        return None
+        return []
     return get_neighbours_by_row(series)
 
 
