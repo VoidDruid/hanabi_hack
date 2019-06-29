@@ -32,15 +32,21 @@ class GithubApi:
 
         return stars_count
 
-    def get_user_events_pr(self, user_name):
+    def get_user_prs(self, user_name):
         try:
-            return api.g.search_issues('', involves=user_name, type='pr')
+            return self.g.search_issues('', involves=user_name, type='pr')
+        except:
+            return None
+
+    def get_user_issues(self, user_name):
+        try:
+            return self.g.search_issues('', involves=user_name, type='issue')
         except:
             return None
 
     def get_prs_by_language(self, user_name):
         lang_dict = defaultdict(int)
-        events = self.get_user_events_pr(user_name)
+        events = self.get_user_prs(user_name)
         if events:
             for ev in events:
                 lang_dict[ev.repository.language] += 1
