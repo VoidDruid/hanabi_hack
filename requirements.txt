@@ -63,3 +63,4 @@ tensorrec==0.26.2
 PyGithub==1.43.7
 matplotlib==3.1.0
 seaborn==0.9.0
+flask-cors==3.0.8
