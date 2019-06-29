@@ -25,8 +25,8 @@ services:
     networks:
      - pg_net
     environment:
-     - PGADMIN_DEFAULT_EMAIL=beschastnovigor@gmail.com
-     - PGADMIN_DEFAULT_PASSWORD=spacewalk
+     - PGADMIN_DEFAULT_EMAIL=#
+     - PGADMIN_DEFAULT_PASSWORD=#
   postgres:
     image: "postgres"
     restart: always
