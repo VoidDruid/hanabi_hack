@@ -10,7 +10,8 @@ services:
     ports:
       - "6379:6379"
   hanabi:
+    build: .
     restart: always
-    image: hanabi
+  #  image: hanabi
     ports:
       - "8080:8080"
