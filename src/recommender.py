@@ -142,7 +142,7 @@ def get_neighbours_by_login(login_):
             }
             series = pd.Series(user_data)
             series.fillna(0)
-    except IndexError:
+    except (IndexError, AttributeError):
         return []
     return get_neighbours_by_row(series)
 
