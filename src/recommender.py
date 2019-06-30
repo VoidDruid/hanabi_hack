@@ -1,8 +1,11 @@
+from collections import defaultdict
 from copy import copy, deepcopy
 
 from sklearn.cluster import KMeans
 from scipy.spatial.distance import euclidean
 import pandas as pd
+
+from github_api import api
 
 data = pd.read_csv('data.csv')
 
@@ -35,7 +38,9 @@ included = [*frontend, *backend, *embedded, *science, *mobile, *hardware]
 other = list(filter(lambda elem: elem not in included, lang_cols))
 
 
-def transform_to_class(data_):
+def transform_to_class(data_, klasses=None):
+    if not klasses:
+        klasses = defaultdict(lambda: 0)
     frontend_col_ = data_[frontend].T.sum()
     backend_col_ = data_[backend].T.sum()
     embedded_col_ = data_[embedded].T.sum()
@@ -45,13 +50,13 @@ def transform_to_class(data_):
     scripting_col_ = data_[scripting].T.sum()
     other_col_ = data_[other].T.sum()
     new_data_ = (
-        frontend_col_,
-        backend_col_,
-        embedded_col_,
-        science_col_,
-        mobile_col_,
-        hardware_col_,
-        scripting_col_,
+        frontend_col_ + klasses['frontend'],
+        backend_col_ + klasses['backend'],
+        embedded_col_ + klasses['embedded'],
+        science_col_ + klasses['science'],
+        mobile_col_ + klasses['mobile'],
+        hardware_col_ + klasses['hardware'],
+        scripting_col_ + klasses['scripting'],
         other_col_,
         data_['stars'],
         data_['repos'],
@@ -101,11 +106,11 @@ def get_label(row):
     return km.predict(row)[0]
 
 
-def get_neighbours_by_row(row):
+def get_neighbours_by_row(row, klasses=None):
     if not isinstance(row, pd.Series):
         row = pd.Series(row)
     row = row.drop('login')
-    lb = get_label(transform_to_class(row))
+    lb = get_label(transform_to_class(row, klasses))
     part = old_data.loc[old_data['cluster'] == lb]
     part = part.drop(['login', 'cluster'], axis=1)
     results = []
@@ -118,8 +123,25 @@ def get_neighbours_by_row(row):
 
 def get_neighbours_by_login(login_):
     try:
-        series = old_data[old_data['login'] == login_].iloc[0]
-        series.pop('cluster')
+        if login_ in old_data['login']:
+            series = old_data[old_data['login'] == login_].iloc[0]
+            series.pop('cluster')
+        else:
+            user_data = api.get_user_profile(login_)
+            user_data = {
+                **{key: user_data.get(key, 0) for key in lang_cols},
+                'stars': user_data.get('stars'),
+                'repos': user_data.get('repos'),
+                'followers': user_data.get('followers'),
+                'following': user_data.get('following'),
+                'contributions': user_data.get('contributions'),
+                'login': user_data.get('login'),
+            }
+            user_data = {
+                key: value if value is not None else 0 for key, value in user_data.items()
+            }
+            series = pd.Series(user_data)
+            series.fillna(0)
     except IndexError:
         return []
     return get_neighbours_by_row(series)
