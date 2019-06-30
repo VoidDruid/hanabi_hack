@@ -1,45 +1,6 @@
 version: '3'
 
-networks:
-  pg_net:
-    external: true
-
 services:
-  portainer:
-    image: "portainer/portainer"
-    restart: always
-    ports:
-     - "7080:9000"
-    volumes:
-     - /var/run/docker.sock:/var/run/docker.sock
-     - ~/.config/portainer:/data
-  pgadmin:
-    depends_on:
-      - postgres
-    image: "dpage/pgadmin4"
-    restart: always
-    ports:
-     - "7081:80"
-    volumes:
-     - ~/.config/pgadmin4:/var/lib/pgadmin
-    networks:
-     - pg_net
-    environment:
-     - PGADMIN_DEFAULT_EMAIL=beschastnovigor@gmail.com
-     - PGADMIN_DEFAULT_PASSWORD=spacewalk
-  postgres:
-    image: "postgres"
-    restart: always
-    ports:
-      - "5432:5432"
-    networks:
-      - pg_net
-    environment:
-      - POSTGRES_USER=hanabi
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=hanabi
-    volumes:
-      - ./.postgres/:/var/lib/postgresql/data
   red:
     restart: unless-stopped
     image: redis
@@ -48,3 +9,8 @@ services:
       - ./.redis:/data
     ports:
       - "6379:6379"
+  hanabi:
+    restart: always
+    image: hanabi
+    ports:
+      - "8080:8080"
