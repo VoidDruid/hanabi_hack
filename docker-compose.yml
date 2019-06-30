@@ -9,3 +9,8 @@ services:
       - ./.redis:/data
     ports:
       - "6379:6379"
+  hanabi:
+    restart: always
+    image: hanabi
+    ports:
+      - "8080:8080"
