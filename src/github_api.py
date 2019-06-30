@@ -28,7 +28,7 @@ def redis_wrapper(field):
 
 class GithubApi:
     def __init__(self):
-        self.g = Github()
+        self.g = Github('KovalevVasilii', 'witcher136')
 
     @redis_wrapper('repos')
     def get_user_repos(self, user):

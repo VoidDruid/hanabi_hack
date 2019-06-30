@@ -9,7 +9,7 @@ def recommend_neighbours_by_login(login):
     return jsonify(get_neighbours_by_login(login))
 
 
-@app.route('/get_neighbours/by_description', methods=['POST'])
+@app.route('/get_neighbours/by_description')#, methods=['POST'])
 def recommend_employees():
     params = request.get_json(force=True)
     print(params)
